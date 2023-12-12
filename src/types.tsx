@@ -10,3 +10,30 @@ export type RootState = {
   currencies: string[];
 };
 export type Dispatch = ThunkDispatch<RootState, void, Action>;
+
+export type InputType = {
+  email: string,
+  password: string
+};
+
+export type GlobalState = {
+  user: InputType,
+  wallet: WalletState,
+};
+
+export type TotalExpensesType = {
+  id: number,
+  value: string,
+  description: string,
+  currency: string,
+  method: string,
+  tag: string,
+  exchangeRates: { [key: string]: { ask: string; name?: string } },
+};
+
+export type WalletType = {
+  currencies: [],
+  expenses: TotalExpensesType[],
+  editor: boolean,
+  idToEdit: number,
+};
