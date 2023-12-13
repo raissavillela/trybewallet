@@ -5,6 +5,9 @@ import { renderWithRouterAndRedux } from './renderWith';
 
 const emailInputTest = 'email-input';
 const passwordInputTest = 'password-input';
+const initialState = {
+  user: { email: 'test@example.com' },
+};
 
 describe('Testando a página de login', () => {
   beforeEach(() => {
@@ -29,7 +32,7 @@ describe('Testando a página de login', () => {
     expect(loginButton).toBeDisabled();
 
     await act(async () => {
-      await userEvent.type(emailInput, 'test@example.com');
+      await userEvent.type(emailInput, initialState.user.email);
       await userEvent.type(passwordInput, '1234567');
     });
 
@@ -42,7 +45,7 @@ describe('Testando a página de login', () => {
     const loginButton = screen.getByRole('button', { name: /Entrar/i });
 
     await act(async () => {
-      await userEvent.type(emailInput, 'test@example.com');
+      await userEvent.type(emailInput, initialState.user.email);
       await userEvent.type(passwordInput, '1234567');
       await userEvent.click(loginButton);
     });
@@ -54,6 +57,26 @@ describe('Testando a página de login', () => {
 });
 
 describe('Página da carteira', () => {
+  test('Verifica wallet e elementos', async () => {
+    renderWithRouterAndRedux(<App />, { initialState, initialEntries: ['/carteira'] });
+
+    const field = screen.getByTestId('total-field');
+    const description = screen.getByTestId('description-input');
+    const value = screen.getByTestId('value-input');
+    const button = screen.getByRole('button', {
+      name: /adicionar despesa/i,
+    });
+
+    expect(field).toHaveTextContent('0');
+
+    await userEvent.type(description, 'Test');
+    await userEvent.type(value, '2');
+    await userEvent.click(button);
+
+    expect(description).toHaveTextContent('');
+    expect(value).toHaveTextContent('');
+  });
+
   test('Verifica se todos os elementos estão na tela', () => {
     renderWithRouterAndRedux(<App />, { initialEntries: ['/carteira'] });
     const elementIds = [

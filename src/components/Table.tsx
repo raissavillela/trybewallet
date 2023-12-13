@@ -1,17 +1,18 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { GlobalState, TotalExpensesType, RootState } from '../types';
+import { GlobalState } from '../types';
 import { deleteExpenses } from '../redux/actions';
+import { Expense } from '../redux/reducers/wallet';
 
 function Table() {
-  const { expenses }: { expenses: TotalExpensesType[] } = useSelector((
+  const { expenses }: { expenses: Expense[] } = useSelector((
     state: GlobalState,
   ) => state.wallet);
   const dispatch = useDispatch();
 
   const handleClick = (event:React.MouseEvent<HTMLButtonElement>) => {
     const expenseNew = expenses
-      .filter((expense) => expense.id !== +event.currentTarget.id);
+      .filter((expense) => expense.id === +event.currentTarget.id);
     dispatch(deleteExpenses(expenseNew));
   };
 
@@ -31,7 +32,7 @@ function Table() {
         </tr>
         <tbody>
           {
-            expenses.length > 0 && expenses.map((expense:TotalExpensesType) => {
+            expenses.length > 0 && expenses.map((expense:Expense) => {
               return (
                 <tr key={ expense.id }>
                   <td>{ expense.description }</td>

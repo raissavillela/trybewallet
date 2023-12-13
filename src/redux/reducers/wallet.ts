@@ -1,18 +1,13 @@
 import { AnyAction } from 'redux';
 
 export type Expense = {
-  id: number;
-  wallet: any;
-  description: string;
-  value: string;
-  currency: string;
-  method: string;
-  tag: string;
-  exchangeRates?: {
-    [chave:string]:{
-      ask: string
-    },
-  },
+  id: number,
+  value: string,
+  description: string,
+  currency: string,
+  method: string,
+  tag: string,
+  exchangeRates: { [key: string]: { ask: string; name?: string } },
 };
 
 export type WalletState = {
@@ -23,7 +18,6 @@ export type WalletState = {
       ask: string
     },
   },
-
 };
 
 export const INITIAL_STATE: WalletState = {

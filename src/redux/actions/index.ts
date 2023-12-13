@@ -6,7 +6,7 @@ export const SET_EMAIL = 'SET_EMAIL';
 export const ADD_EXPENSE = 'ADD_EXPENSE';
 export const ADD_EXPENSE_ACTION_ID = 'ADD_EXPENSE_ACTION_ID';
 export const FETCH_CURRENCIES_SUCCESS = 'FETCH_CURRENCIES_SUCCESS';
-export const DELETE_EXPENSES = 'DELETE_EXPENSES';
+export const REMOVE_EXPENSE = 'DELETE_EXPENSES';
 
 export const setEmail = (email: string) => ({
   type: SET_EMAIL,
@@ -49,7 +49,7 @@ export const fetchCurrenciesSuccess = (currencies: string[]) => ({
   payload: currencies,
 });
 
-export const deleteExpenses = (id: number) => ({
-  type: DELETE_EXPENSES,
-  payload: id,
+export const deleteExpenses = (expenses:Expense[]) => ({
+  type: REMOVE_EXPENSE,
+  payload: expenses,
 });
