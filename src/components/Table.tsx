@@ -1,24 +1,27 @@
 import React from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-import { GlobalState } from '../types';
-import { deleteExpenses } from '../redux/actions';
-import { Expense } from '../redux/reducers/wallet';
+import { useSelector } from 'react-redux';
+import { RootState } from '../types';
+
+export type Expense = {
+  description: string;
+  value: string;
+  currency: string;
+  method: string;
+  tag: string;
+  exchangeRates: {
+    [chave: string]: {
+      ask: string;
+    };
+  };
+  id: number;
+};
 
 function Table() {
-  const { expenses }: { expenses: Expense[] } = useSelector((
-    state: GlobalState,
-  ) => state.wallet);
-  const dispatch = useDispatch();
-
-  const handleClick = (event:React.MouseEvent<HTMLButtonElement>) => {
-    const expenseNew = expenses
-      .filter((expense) => expense.id === +event.currentTarget.id);
-    dispatch(deleteExpenses(expenseNew));
-  };
+  const { expenses } = useSelector((state: RootState) => state.wallet);
 
   return (
-    <div>
-      <table>
+    <table>
+      <thead>
         <tr>
           <th>Descrição</th>
           <th>Tag</th>
@@ -30,39 +33,28 @@ function Table() {
           <th>Moeda de conversão</th>
           <th>Editar/Excluir</th>
         </tr>
-        <tbody>
-          {
-            expenses.length > 0 && expenses.map((expense:Expense) => {
-              return (
-                <tr key={ expense.id }>
-                  <td>{ expense.description }</td>
-                  <td>{ expense.tag }</td>
-                  <td>{ expense.method }</td>
-                  <td>{ (+expense.value).toFixed(2) }</td>
-                  <td>{ expense.exchangeRates[expense.currency].name }</td>
-                  <td>{ (+expense.exchangeRates[expense.currency].ask).toFixed(2) }</td>
-                  <td>
-                    { (+expense.value * +expense.exchangeRates[expense.currency]
-                      .ask).toFixed(2) }
-                  </td>
-                  <td>Real</td>
-                  <td>
-                    <button>Editar</button>
-                    <button
-                      id={ (expense.id).toString() }
-                      onClick={ (event) => handleClick(event) }
-                      data-testid="delete-btn"
-                    >
-                      Excluir
-                    </button>
-                  </td>
-                </tr>
-              );
-            })
-          }
-        </tbody>
-      </table>
-    </div>
+      </thead>
+      <tbody>
+        {expenses.map((expense:any) => (
+          <tr key={ expense.id }>
+            <td>{expense.description}</td>
+            <td>{expense.tag}</td>
+            <td>{expense.method}</td>
+            <td>{Number(expense.value).toFixed(2)}</td>
+            <td>{expense.currency}</td>
+            <td>{(Number(expense.exchangeRates[expense.currency].ask).toFixed(2))}</td>
+            <td>
+              {(Number(expense
+                .value) * Number(expense
+                .exchangeRates[expense
+                  .currency].ask)).toFixed(2)}
+            </td>
+            <td>{expense.exchangeRates[expense.currency].name}</td>
+            <td>Editar/Excluir</td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
   );
 }
 
