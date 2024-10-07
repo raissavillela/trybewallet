@@ -1,22 +1,19 @@
 import { AnyAction } from 'redux';
 
-export const INITIAL_STATE = {
+const INITIAL_STATE = {
   email: '',
-  password: '',
 };
 
-export type LoginState = {
-  email: string,
-  password: string,
-};
-
-const user = (state = INITIAL_STATE, action: AnyAction): LoginState => {
+function user(state = INITIAL_STATE, action: AnyAction) {
   switch (action.type) {
-    case 'SET_EMAIL':
-      return { ...state, email: action.payload };
+    case 'USER':
+      return {
+        ...state,
+        email: action.payload,
+      };
     default:
       return state;
   }
-};
+}
 
 export default user;

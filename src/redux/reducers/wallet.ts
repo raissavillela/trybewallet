@@ -1,45 +1,46 @@
 import { AnyAction } from 'redux';
+import { ADD_EXPENSE, DELETE_EXPENSE,
+  RECEIVE_DATA_SUCCESS, REQUEST_DATA } from '../actions';
+import { WalletType } from '../../type';
 
-export type Expense = {
-  id: number,
-  value: string,
-  description: string,
-  currency: string,
-  method: string,
-  tag: string,
-  exchangeRates: { [key: string]: { ask: string; name?: string } },
-};
-
-export type WalletState = {
-  expenses: Expense[];
-  currencies: string[];
-  exchangeRates: {
-    [chave:string]:{
-      ask: string
-    },
-  },
-};
-
-export const INITIAL_STATE: WalletState = {
-  expenses: [],
+const INITIAL_STATE = {
   currencies: [],
-  exchangeRates: {},
+  expenses: [],
+  editor: false,
+  idToEdit: 0,
 };
 
-function wallet(state = INITIAL_STATE, action: AnyAction) : WalletState {
+const walletReducer = (state:WalletType = INITIAL_STATE, action: AnyAction) => {
   switch (action.type) {
-    case 'ADD_EXPENSE':
+    case REQUEST_DATA: {
+      return {
+        ...state,
+      };
+    }
+    case RECEIVE_DATA_SUCCESS: {
+      const currenciesArray = Object.keys(action.payload)
+        .filter((coin) => coin !== 'USDT');
+
+      return {
+        ...state,
+        currencies: currenciesArray,
+      };
+    }
+    case ADD_EXPENSE: {
       return {
         ...state,
         expenses: [...state.expenses, action.payload],
       };
-    case 'FETCH_CURRENCIES_SUCCESS':
+    }
+    case DELETE_EXPENSE: {
       return {
         ...state,
-        currencies: action.payload,
+        expenses: state.expenses.filter((expense) => expense.id !== action.payload),
       };
+    }
     default:
       return state;
   }
-}
-export default wallet;
+};
+
+export default walletReducer;

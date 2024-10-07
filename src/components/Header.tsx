@@ -1,22 +1,41 @@
-import React from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from '../redux/reducers';
-import { Expense } from '../redux/reducers/wallet';
 
 function Header() {
-  const email = useSelector((state: RootState) => state.user.email);
-  const totalExpenses = useSelector((state: RootState) => state.wallet.expenses);
+  const user = useSelector((globalState: any) => globalState.user);
+  const wallet = useSelector((globalState: any) => globalState.wallet);
 
-  const totalValue = totalExpenses.reduce((acc, expense: Expense) => {
-    const currencyAsk = expense?.exchangeRates?.[expense.currency]?.ask;
-    return acc + Number(expense?.value) * Number(currencyAsk);
-  }, 0);
+  const totalExpensive = () => {
+    const convertion = wallet.expenses
+      .filter((expense: any) => {
+        const { currency, exchangeRates } = expense;
+        return currency === exchangeRates[currency].code;
+      })
+      .map((expense: any) => expense.value * expense.exchangeRates[expense.currency].ask)
+      .reduce((soma: any, i: any) => {
+        return soma + i;
+      }, 0);
+
+    return convertion.toFixed(2);
+  };
+
+  if (!user || !user.email) {
+    return <div>Loading...</div>;
+  }
 
   return (
+
     <div>
-      <span data-testid="email-field">{email}</span>
-      <span data-testid="total-field">{ totalValue.toFixed(2) }</span>
-      <span data-testid="header-currency-field">BRL</span>
+      <h1 data-testid="email-field">
+        Usuário:
+        {' '}
+        {user.email}
+      </h1>
+      <h2>
+        Total:
+        <span data-testid="total-field">{totalExpensive()}</span>
+      </h2>
+
+      <h2 data-testid="header-currency-field">BRL</h2>
     </div>
   );
 }

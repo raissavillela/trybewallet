@@ -1,23 +1,15 @@
-import React from 'react';
-import { useSelector } from 'react-redux';
-import { RootState } from '../types';
-
-export type Expense = {
-  description: string;
-  value: string;
-  currency: string;
-  method: string;
-  tag: string;
-  exchangeRates: {
-    [chave: string]: {
-      ask: string;
-    };
-  };
-  id: number;
-};
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch } from '../type';
+import { deleteExpense } from '../redux/actions';
 
 function Table() {
-  const { expenses } = useSelector((state: RootState) => state.wallet);
+  const { expenses } = useSelector((globalState: any) => globalState.wallet);
+
+  const dispatch: AppDispatch = useDispatch();
+
+  const handleClick = (id: number) => {
+    dispatch(deleteExpense(id));
+  };
 
   return (
     <table>
@@ -35,22 +27,30 @@ function Table() {
         </tr>
       </thead>
       <tbody>
-        {expenses.map((expense:any) => (
+        {expenses.map((expense: any) => (
           <tr key={ expense.id }>
             <td>{expense.description}</td>
             <td>{expense.tag}</td>
             <td>{expense.method}</td>
-            <td>{Number(expense.value).toFixed(2)}</td>
-            <td>{expense.currency}</td>
-            <td>{(Number(expense.exchangeRates[expense.currency].ask).toFixed(2))}</td>
-            <td>
-              {(Number(expense
-                .value) * Number(expense
-                .exchangeRates[expense
-                  .currency].ask)).toFixed(2)}
-            </td>
+            <td>{parseFloat(expense.value).toFixed(2)}</td>
             <td>{expense.exchangeRates[expense.currency].name}</td>
-            <td>Editar/Excluir</td>
+            <td>{parseFloat(expense.exchangeRates[expense.currency].ask).toFixed(2)}</td>
+            <td>
+              {(parseFloat(expense.value)
+              * parseFloat(expense.exchangeRates[expense.currency].ask))
+                .toFixed(2)}
+            </td>
+            <td>Real</td>
+            <td>
+              <button type="button">Editar</button>
+              <button
+                type="button"
+                data-testid="delete-btn"
+                onClick={ () => handleClick(expense.id) }
+              >
+                Excluir
+              </button>
+            </td>
           </tr>
         ))}
       </tbody>

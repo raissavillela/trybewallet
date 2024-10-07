@@ -1,50 +1,61 @@
-import { ThunkAction } from 'redux-thunk';
-import { Expense } from '../reducers/wallet';
-import { Dispatch, RootState } from '../../types';
+import getCurriencies from '../../services/currenciesAPI';
+import { AppDispatch } from '../../type';
 
-export const SET_EMAIL = 'SET_EMAIL';
-export const ADD_EXPENSE = 'ADD_EXPENSE';
-export const ADD_EXPENSE_ACTION_ID = 'ADD_EXPENSE_ACTION_ID';
-export const FETCH_CURRENCIES_SUCCESS = 'FETCH_CURRENCIES_SUCCESS';
-export const REMOVE_EXPENSE = 'REMOVE_EXPENSE';
-
-export const setEmail = (email: string) => ({
-  type: SET_EMAIL,
+export const setUser = (email: string) => ({
+  type: 'USER',
   payload: email,
 });
-export const addExpense = (currencies: Expense) => ({
+
+export const REQUEST_DATA = 'REQUEST_DATA';
+export const RECEIVE_DATA_SUCCESS = 'RECEIVE_DATA_SUCCESS';
+export const RECEIVE_DATA_ERROR = 'RECEIVE_DATA_ERROR';
+export const ADD_EXPENSE = 'ADD_EXPENSE';
+export const DELETE_EXPENSE = 'DELETE_EXPENSE';
+
+//  essa action é disparada quando vou fazer a requisição pra API
+export const fetchDataRequest = () => ({
+  type: REQUEST_DATA,
+});
+
+//  essa action é disparada quando o retorno da API for de sucesso
+export const fetchDataSuccess = (code: string) => ({
+  type: RECEIVE_DATA_SUCCESS,
+  payload: code,
+});
+
+//  essa action é disparada quando o retorno da API for de erro
+export const fetchDataError = () => ({
+  type: RECEIVE_DATA_ERROR,
+});
+
+export const addExpense = (expenses: any) => ({
   type: ADD_EXPENSE,
-  payload: currencies,
+  payload: expenses,
 });
 
-export const addExpenseRates = (expenses: any) => async (dispatch : Dispatch) => {
-  try {
-    const response = await fetch('https://economia.awesomeapi.com.br/json/all');
-    const data = await response.json();
-    const filteredCurrencies = data;
-
-    dispatch(addExpense({ ...expenses, exchangeRates: filteredCurrencies }));
-  } catch (error) {
-    console.error('Erro ao buscar moedas:', error);
-  }
-};
-
-export type AsyncAction<R = void> = ThunkAction<Promise<R>, RootState, unknown, any>;
-
-export const fetchCurrencies = (): AsyncAction => async (dispatch) => {
-  try {
-    const response = await fetch('https://economia.awesomeapi.com.br/json/all');
-    const data = await response.json();
-    const filteredCurrencies = Object
-      .keys(data).filter((currency) => currency !== 'USDT');
-
-    dispatch(fetchCurrenciesSuccess(filteredCurrencies));
-  } catch (error) {
-    console.error('Erro ao buscar moedas:', error);
-  }
-};
-
-export const fetchCurrenciesSuccess = (currencies: string[]) => ({
-  type: FETCH_CURRENCIES_SUCCESS,
-  payload: currencies,
+export const deleteExpense = (id:number) => ({
+  type: DELETE_EXPENSE,
+  payload: id,
 });
+
+export const actionFetchApi = (form?: any) => {
+  // O parametro dispatch é fornecido pelo thunk, resolve a requisição e enviar o resultado pro reducer
+  return async (dispatch: AppDispatch) => {
+  // disapra a ação q indica que será feita a requisição API
+    dispatch(fetchDataRequest());
+    try {
+      // realizar requisição pra API
+      // dispara action sucesso
+      const result = await getCurriencies();
+      if (form) {
+        const expense = { ...form, exchangeRates: result };
+        dispatch(addExpense(expense));
+      } else {
+        dispatch(fetchDataSuccess(result));
+      }
+    } catch (error) {
+      // dispara action erro
+      dispatch(fetchDataError());
+    }
+  };
+};
