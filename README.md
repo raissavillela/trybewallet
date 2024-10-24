@@ -2,6 +2,7 @@
 
 Foi desenvolvida uma carteira de controle de gastos com conversor de moedas.
 Ao utilizar essa aplicação, a pessoa usuária deverá ser capaz de:
+
   * Adicionar, remover e editar um gasto.
 
   * Visualizar sua tabela de gastos.
@@ -9,7 +10,9 @@ Ao utilizar essa aplicação, a pessoa usuária deverá ser capaz de:
   * Visualizar o total de gastos convertidos para uma moeda de sua escolha.
     
 
+
   Neste projeto, atestei que sou capaz de:
+  
   * Criar um store Redux em aplicações React.
 
   * Criar reducers no Redux em aplicações React.
