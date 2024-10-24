@@ -10,8 +10,7 @@ Ao utilizar essa aplicação, a pessoa usuária deverá ser capaz de:
   * Visualizar o total de gastos convertidos para uma moeda de sua escolha.
     
 
-
-  Neste projeto, atestei que sou capaz de:
+##  Neste projeto, atestei que sou capaz de:
   
   * Criar um store Redux em aplicações React.
 
