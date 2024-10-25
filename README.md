@@ -42,8 +42,6 @@ Ao utilizar essa aplicação, a pessoa usuária deverá ser capaz de:
   
   *  Desenvolver testes que cobrem até 90% das linhas de código (como os testes foram feitos antes da estilização, a cobertura atual pode não atingir os 90%).
 
-Além disso, toda a aplicação foi posteriormente estilizada garantindo um layout moderno e responsivo ao usuário.
-
 
 # O que já veio pronto da Trybe
    * Utilização do Cypress para garantir o funcionamento dos requisitos e dos testes criados e requisitados pela Trybe.
